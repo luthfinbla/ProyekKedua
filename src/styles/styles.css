@@ -1,0 +1,151 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+header {
+  background-color: #1976d2;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+main {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.story-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.story {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  padding: 16px;
+  transition: transform 0.3s ease;
+}
+
+.story:hover {
+  transform: translateY(-5px);
+}
+
+.story img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.story h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #222;
+}
+
+.story p {
+  font-size: 14px;
+  color: #666;
+}
+
+footer {
+  text-align: center;
+  padding: 15px;
+  background-color: #eee;
+  font-size: 14px;
+}
+
+
+/* kamera */
+.camera__video {
+  background-color: #3d3d3d;
+}
+
+.camera__canvas {
+  display: none;
+}
+
+.camera__tools_buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.camera__tools_buttons > button {
+  padding: 8px 20px;
+}
+
+.camera__output {
+  list-style: none;
+
+  display: grid;
+  grid-template-columns: repeat(1, minmax(200px, 1fr));
+  justify-content: center;
+  gap: 16px;
+}
+
+.camera__video,
+.camera__output img {
+  width: 100%;
+}
+
+@media screen and (width > 600px) {
+  .camera__output {
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+  }
+}
+
+@media screen and (width > 1000px) {
+  .camera__output {
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+  }
+}
+
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #000;
+      color: #fff;
+      padding: 8px;
+      z-index: 100;
+    }
+
+    .skip-link:focus {
+      top: 10px;
+    }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: fade 0.3s ease;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
