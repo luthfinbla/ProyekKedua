@@ -11,11 +11,17 @@ const STATIC_ASSETS = [
 
 self.addEventListener('push', (event) => {
   const data = event.data?.json() || {};
-  self.registration.showNotification(data.title || 'Notifikasi!', {
-    body: data.body || 'Ada sesuatu yang baru!',
+
+  const title = data.title || 'Notifikasi Baru';
+  const options = {
+    body: data.body || 'Ada cerita baru di aplikasi!',
     icon: '/icons/icon-192.png',
     badge: '/icons/badge-72.png',
-  });
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
 });
 
 self.addEventListener('install', (event) => {

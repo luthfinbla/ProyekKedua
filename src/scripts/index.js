@@ -79,21 +79,22 @@ if ('serviceWorker' in navigator) {
 async function initPush() {
   try {
     await requestNotificationPermission();
-    const publicKey = await getVapidKey();
-    await subscribeUserToPush(publicKey);
-    console.log('Push notification setup berhasil!');
-  } catch (err) {
-    console.error('Gagal setup push notification:', err);
+    await subscribeUserToPush();
+  } catch (error) {
+    console.error('Gagal setup push notification:', error);
   }
 }
 
+initPush();
+
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
+  navigator.serviceWorker
+    .register('/sw.js')
     .then(() => {
-      console.log('✅ Service Worker terdaftar');
-      initPush(); // ← Taruh di sini
+      console.log('✅ Service Worker berhasil didaftarkan');
+      initPush();
     })
-    .catch((err) => {
-      console.error('❌ SW gagal:', err);
+    .catch((error) => {
+      console.error('❌ Gagal mendaftarkan Service Worker:', error);
     });
 }
