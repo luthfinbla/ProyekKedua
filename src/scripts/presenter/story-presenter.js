@@ -2,6 +2,7 @@ import { getAllStories } from '../model/story-model';
 import { uploadStory } from '../model/addstory-model';
 import CONFIG from '../config';
 import IdbHelper from '../utils/idb';
+import { saveStory, getAllStories as getOfflineStories } from '../utils/indexeddb-helper';
 
 import {
   bindFormSubmit,
@@ -98,3 +99,12 @@ class StoryPresenter {
 
 export default StoryPresenter;
 
+try {
+  const stories = await this.getAllStories();
+  renderStoryList(stories);
+  stories.forEach(saveStory); 
+} catch (err) {
+  const offline = await getOfflineStories();
+  renderStoryList(offline);
+  showError('Gagal memuat cerita dari API, menampilkan data offline.');
+}
