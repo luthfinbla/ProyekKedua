@@ -116,6 +116,16 @@ export function renderStoryList(stories) {
     `;
     container.appendChild(storyDiv);
   });
+
+    stories.forEach((story) => {
+    container.innerHTML += `
+      <div class="story-card">
+        <h3>${story.name}</h3>
+        <p>${story.description}</p>
+        <div id="save-story-${story.id}"></div>
+      </div>
+    `;
+  });
 }
 
 export function renderStoryItem(story) {
@@ -150,5 +160,22 @@ function bindDeleteButton(callback) {
       const id = e.target.dataset.id;
       callback(id);
     });
+  });
+}
+
+export function renderSaveButton(story) {
+  const container = document.getElementById(`save-story-${story.id}`);
+  if (!container) return;
+
+  container.innerHTML = `
+    <button id="save-${story.id}" aria-label="Simpan story">❤️ Simpan Story</button>
+  `;
+
+  document.getElementById(`save-${story.id}`).addEventListener('click', async () => {
+    if (typeof story === 'object') {
+      await import('../model/bookmark-story').then(module => {
+        module.saveStoryToBookmark(story);
+      });
+    }
   });
 }

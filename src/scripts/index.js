@@ -6,6 +6,20 @@ import {
   subscribeUserToPush,
 } from '../scripts/utils/notification-helper.js';
 
+document.addEventListener('DOMContentLoaded', () => {
+  const app = new App({
+    navigationDrawer: document.querySelector('#navigationDrawer'),
+    content: document.querySelector('#mainContent'),
+    loader: document.querySelector('#mainLoader'),
+  });
+
+  app.init();
+});
+
+window.addEventListener('DOMContentLoaded', async () => {
+  app.init();
+  await initPush(); 
+});
 
 document.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('token');
@@ -34,11 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (navigationDrawer) navigationDrawer.style.display = 'none';
   }
 
-  const app = new App({
-    content,
-    drawerButton,
-    navigationDrawer,
-  });
+
 
   await app.renderPage();
 

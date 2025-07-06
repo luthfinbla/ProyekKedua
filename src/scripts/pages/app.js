@@ -1,19 +1,23 @@
+// src/scripts/pages/app.js
 import routes from '../routes/routes';
 import { getActiveRoute } from '../routes/url-parser';
-import { transitionHelper, setupSkipToContent } from '../utils';
+import { setupSkipToContent } from '../utils';
 
-class App {
-  #content = null;
-  #drawerButton = null;
-  #navigationDrawer = null;
+export default class App {
+  #content;
+  #drawerButton;
+  #navigationDrawer;
 
   constructor({ navigationDrawer, drawerButton, content }) {
-    this.#content = content;
-    this.#drawerButton = drawerButton;
     this.#navigationDrawer = navigationDrawer;
+    this.#drawerButton = drawerButton;
+    this.#content = content;
+  }
 
+  init() {
     this._setupDrawer();
     this._setupSkipLink();
+    this.renderPage(); // panggil halaman saat init
   }
 
   _setupDrawer() {
@@ -22,7 +26,10 @@ class App {
     });
 
     document.body.addEventListener('click', (event) => {
-      if (!this.#navigationDrawer.contains(event.target) && !this.#drawerButton.contains(event.target)) {
+      if (
+        !this.#navigationDrawer.contains(event.target) &&
+        !this.#drawerButton.contains(event.target)
+      ) {
         this.#navigationDrawer.classList.remove('open');
       }
 
@@ -30,7 +37,7 @@ class App {
         if (link.contains(event.target)) {
           this.#navigationDrawer.classList.remove('open');
         }
-      })
+      });
     });
   }
 
@@ -43,41 +50,40 @@ class App {
   }
 
   setupNavigationList() {
-  const navList = document.querySelector('#nav-list');
-  if (!navList) return;
+    const navList = document.querySelector('#nav-list');
+    if (!navList) return;
 
-  const isLoggedIn = !!localStorage.getItem('token');
-  navList.innerHTML = `
-    <li><a href="#/home">Beranda</a></li>
-    <li><a href="#/add">Tambah Cerita</a></li>
-    <li><a href="#/about">Tentang</a></li>
-    ${isLoggedIn
-      ? '<li><a href="#/logout">Keluar</a></li>'
-      : '<li><a href="#/login">Masuk</a></li>'}
-  `;
-}
-
-async renderPage() {
-  const url = getActiveRoute();
-  const route = routes[url];
- 
-  const page = route();
- 
-  if (!document.startViewTransition) {
-    this.#content.innerHTML = await page.render();
-    await page.afterRender();
-    return;
+    const isLoggedIn = !!localStorage.getItem('token');
+    navList.innerHTML = `
+      <li><a href="#/home">Beranda</a></li>
+      <li><a href="#/add">Tambah Cerita</a></li>
+      <li><a href="#/about">Tentang</a></li>
+      ${isLoggedIn
+        ? '<li><a href="#/logout">Keluar</a></li>'
+        : '<li><a href="#/login">Masuk</a></li>'}
+    `;
   }
-  const transition = document.startViewTransition(async () => {
-    this.#content.innerHTML = await page.render();
-    await page.afterRender();
-  });
-  transition.updateCallbackDone.then(() => {
-    scrollTo({ top: 0, behavior: 'instant' });
-    this.setupNavigationList();
-  });
-}
 
-}
+  async renderPage() {
+    const url = getActiveRoute();
+    const route = routes[url];
 
-export default App;
+    const page = route();
+
+    if (!document.startViewTransition) {
+      this.#content.innerHTML = await page.render();
+      await page.afterRender();
+      return;
+    }
+
+    const transition = document.startViewTransition(async () => {
+      this.#content.innerHTML = await page.render();
+      await page.afterRender();
+    });
+
+    transition.updateCallbackDone.then(() => {
+      scrollTo({ top: 0, behavior: 'instant' });
+      this.setupNavigationList();
+    });
+  }
+}

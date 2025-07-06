@@ -1,4 +1,6 @@
-import CONFIG from '../config';
+export async function getVapidKey() {
+  return 'BCCs2eonMI-6H2ctvFaWg-UYdDv387Vno_bzUzALpB442r2lCnsHmtrx8biyPi_E-1fSGABK_Qs_GlvPoJJqxbk';
+}
 
 export async function requestNotificationPermission() {
   const status = await Notification.requestPermission();
@@ -12,21 +14,20 @@ function urlBase64ToUint8Array(base64String) {
   return new Uint8Array([...raw].map((char) => char.charCodeAt(0)));
 }
 
-export async function subscribeUserToPush() {
+export async function subscribeUserToPush(publicKey) {
   const registration = await navigator.serviceWorker.ready;
-
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(CONFIG.VAPID_PUBLIC_KEY),
+    applicationServerKey: urlBase64ToUint8Array(publicKey),
   });
 
-  const subscriptionJSON = subscription.toJSON();
+  const subscriptionJSON = subscription.toJSON(); 
 
-  await fetch(`${CONFIG.BASE_URL}/notifications/subscribe`, {
+  await fetch(`${CONFIG.BASE_URL}/v1/notifications/subscribe`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
     body: JSON.stringify({
       endpoint: subscriptionJSON.endpoint,
